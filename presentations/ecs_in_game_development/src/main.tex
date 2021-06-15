@@ -1,0 +1,148 @@
+\documentclass[10pt]{beamer}
+\usepackage[utf8x]{inputenc}
+\usepackage{hyperref}
+\usepackage{fontawesome}
+\usepackage{graphicx}
+\usepackage[english,ngerman]{babel}
+\graphicspath{ {./images/} }
+% ------------------------------------------------------------------------------
+% Use the beautiful metropolis beamer template
+% ------------------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage{fontawesome}
+\usepackage{FiraSans} 
+\mode<presentation>
+{
+  \usetheme[progressbar=foot,numbering=fraction,background=light]{metropolis} 
+  \usecolortheme{crane} % or try albatross, beaver, crane, ...
+  \usefonttheme{structurebold}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+  %\setbeamertemplate{frame footer}{My custom footer}
+} 
+
+% ------------------------------------------------------------------------------
+% beamer doesn't have texttt defined, but I usually want it anyway
+% ------------------------------------------------------------------------------
+\let\textttorig\texttt
+\renewcommand<>{\texttt}[1]{%
+  \only#2{\textttorig{#1}}%
+}
+
+% ------------------------------------------------------------------------------
+% minted
+% ------------------------------------------------------------------------------
+\usepackage{minted}
+
+
+% ------------------------------------------------------------------------------
+% tcolorbox / tcblisting
+% ------------------------------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{codecolor}{HTML}{FFC300}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{most,listingsutf8,minted}
+
+\tcbset{tcbox width=auto,left=1mm,top=1mm,bottom=1mm,
+right=1mm,boxsep=1mm,middle=1pt}
+
+\newtcblisting{myr}[1]{colback=codecolor!5,colframe=codecolor!80!black,listing only, 
+minted options={numbers=left, style=tcblatex,fontsize=\tiny,breaklines,autogobble,linenos,numbersep=3mm},
+left=5mm,enhanced,
+title=#1, fonttitle=\bfseries,
+listing engine=minted,minted language=r}
+
+
+% ------------------------------------------------------------------------------
+% Listings
+% ------------------------------------------------------------------------------
+\definecolor{mygreen}{HTML}{37980D}
+\definecolor{myblue}{HTML}{0D089F}
+\definecolor{myred}{HTML}{98290D}
+
+\usepackage{listings}
+
+% the following is optional to configure custom highlighting
+\lstdefinelanguage{XML}
+{
+  morestring=[b]",
+  morecomment=[s]{<!--}{-->},
+  morestring=[s]{>}{<},
+  morekeywords={ref,xmlns,version,type,canonicalRef,metr,real,target}% list your attributes here
+}
+
+\lstdefinestyle{myxml}{
+language=XML,
+showspaces=false,
+showtabs=false,
+basicstyle=\ttfamily,
+columns=fullflexible,
+breaklines=true,
+showstringspaces=false,
+breakatwhitespace=true,
+escapeinside={(*@}{@*)},
+basicstyle=\color{mygreen}\ttfamily,%\footnotesize,
+stringstyle=\color{myred},
+commentstyle=\color{myblue}\upshape,
+keywordstyle=\color{myblue}\bfseries,
+}
+
+% ------------------------------------------------------------------------------
+% The Document
+% ------------------------------------------------------------------------------
+\title{ECS in Game Development}
+\author{Jorge Pinto Sousa (He/Him), Luiz Jardim (Viceroy/Viceroyer)}
+
+\institute{Critical Techworks}
+\date{July 2021}
+\usemintedstyle[yaml]{}
+\newcommand{\cpp}{C++}
+\newcommand\myheading[1]{%
+  \par\bigskip
+  {\Large\bfseries#1}\par\smallskip}
+
+
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Entity–component–system (ECS)}
+\begin{frame}[fragile]{Entity–component–system (ECS)}
+
+\begin{itemize}
+    \item   
+        Entity-Component-System is a software architecture pattern frequently used in game development, often together with a data oriented design. 
+    \item
+        It addresses some of the problems with object orientation while promoting code reusability, extendability, maintanability and paralle... para... parallelizability (is this a word?).
+    \item 
+        One of it's greatest features is easily modifying behaviour at runtime.
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}[ragile]{Entity–component–system (ECS)}
+\begin{center}
+\myheading{Composition over inheritance}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Entity–component–system (ECS)}
+\begin{itemize}
+    \item   
+        \textbf{Entities} are unique "things" that are assigned groups of \textbf{Components}, which are then processed using \textbf{Systems}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Entity–component–system (ECS)}
+\myheading{What does this mean?}
+\begin{itemize}
+    \item Imagine that you have an \mintinline{bash}{Entity} (a Villain for example), that has a \mintinline{bash}{Position} and a \mintinline{bash}{Velocity} Component, and a NPC which has a \mintinline{bash}{Position} and \mintinline{bash}{UI} component.
+    \item Then you can have a \mintinline{bash}{Movement} system that will run on all entities that have a \mintinline{bash}{Position} and \mintinline{bash}{Velocity} component, for example.
+\end{itemize}
+\end{frame}
+\end{document}f

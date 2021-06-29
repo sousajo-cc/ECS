@@ -112,37 +112,100 @@ keywordstyle=\color{myblue}\bfseries,
 
 \section{Entity–component–system (ECS)}
 \begin{frame}[fragile]{Entity–component–system (ECS)}
+    \begin{center}
+        \myheading{\textit{Separate data from behaviour.}}
+    \end{center}
+\end{frame}
+\begin{frame}[fragile]{Entity–component–system (ECS)}
 
 \begin{itemize}
-    \item   
-        Entity-Component-System is a software architecture pattern frequently used in game development, often together with a data oriented design. 
     \item
         It addresses some of the problems with object orientation while promoting code reusability, extendability, maintanability and paralle... para... parallelizability (is this a word?).
     \item 
         One of it's greatest features is easily modifying behaviour at runtime.
 \end{itemize}
+\end{frame}
 
+\begin{frame}[fragile]{ECS - Characteristics}
+
+ECS has:
+\begin{itemize}
+    \item   
+        \textbf{Entities} are unique "things (identifiers).
+    \item
+        \textbf{Components} which are just datatypes without \textbf{behaviour}
+    \item
+        \textbf{Systems} which are functions that will act in \textbf{Entities} that have a certain set of
+        \textbf{Components}.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{ECS - Characteristics}
+
+Also:
+\begin{itemize}
+    \item 
+        \textbf{Entities} can contain zero or more \textbf{components}.
+    \item 
+        \textbf{Entities} can dynamically change \textbf{components}.
+\end{itemize}
+There are frameworks that implement and enable this design pattern. 
+
+In the scope of this presentation we'll use \href{https://bevyengine.org/}{\color{blue}{Bevy}}.
+\end{frame}
+
+\begin{frame}[fragile]{ECS - Characteristics}
+
+Despite the \textit{"by the book"} definition of ECS, which has to have entities, component and systems, sometimes in practice that is not the case.
+
+Usually anything that let's you add stuff to entities and then querying them for those things, are usually considered to be an ECS.
 
 \end{frame}
 
-\begin{frame}[ragile]{Entity–component–system (ECS)}
+\begin{frame}[fragile]{ECS is not EC}
+
+In an EC framework, components contain both data and behaviour, and that behaviour is executed directly on the component.
+
+(Place example here)
+\end{frame}
+
+\begin{frame}[fragile]{Is ECS too different from OOP?}
 \begin{center}
-\myheading{Composition over inheritance}
+\myheading{Composition over inheritance.}
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Entity–component–system (ECS)}
-\begin{itemize}
-    \item   
-        \textbf{Entities} are unique "things" that are assigned groups of \textbf{Components}, which are then processed using \textbf{Systems}.
-\end{itemize}
+\begin{frame}[fragile]{Is ECS too different from OOP?}
+\begin{center}
+\myheading{Exposed Plain Data Objects over encapsulation.}
+\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Entity–component–system (ECS)}
-\myheading{What does this mean?}
+\begin{frame}[fragile]{Is ECS too different from OOP?}
+\begin{center}
+\myheading{Separate data and behaviour.}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Is ECS too different from OOP?}
+\begin{center}
+\myheading{OOP object instances are of a single non-changing type, while entities can have dynamically changing components.}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{ECS - An example}
+\includegraphics[width=10cm,height=7cm]{../images/image.png}
+\end{frame}
+
+\begin{frame}[fragile]{References}
 \begin{itemize}
-    \item Imagine that you have an \mintinline{bash}{Entity} (a Villain for example), that has a \mintinline{bash}{Position} and a \mintinline{bash}{Velocity} Component, and a NPC which has a \mintinline{bash}{Position} and \mintinline{bash}{UI} component.
-    \item Then you can have a \mintinline{bash}{Movement} system that will run on all entities that have a \mintinline{bash}{Position} and \mintinline{bash}{Velocity} component, for example.
+    \item
+        \href{https://bevyengine.org/}{\color{blue}{Bevy}}
+    \item 
+        \href{https://github.com/SanderMertens/ecs-faq}{\color{blue}{ecs-faq}}
+    \item
+        \href{https://software.intel.com/content/www/us/en/develop/articles/get-started-with-the-unity-entity-component-system-ecs-c-sharp-job-system-and-burst-compiler.html}{\color{blue}{Get Started with the Unity* Entity Component System (ECS)}}
 \end{itemize}
 \end{frame}
-\end{document}f
+\end{document}

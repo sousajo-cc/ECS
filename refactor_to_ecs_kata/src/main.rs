@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 
-mod direction;
 mod components;
+mod direction;
+mod sprite;
 mod systems;
 
 fn main() {

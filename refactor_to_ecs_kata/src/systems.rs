@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
+use crate::components::Char;
 use crate::direction::Direction;
+use crate::sprite::SPRITE;
 
 
 pub fn load_sprite_sheet(
@@ -26,7 +28,7 @@ pub fn load_sprite_sheet(
 pub fn input(
     time: Res<Time>,
     input: Res<Input<KeyCode>>,
-    mut query: Query<&mut Char>, //if you forget mut, the compiler panics lol
+    mut query: Query<&mut Char>,
 ) {
     for mut char in query.iter_mut() {
         if input.pressed(KeyCode::Left) {

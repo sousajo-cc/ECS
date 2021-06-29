@@ -7,7 +7,7 @@ pub struct Sprite {
     pub frame_time: f32,
 }
 
-pub const SPRITE: Sprite = Sprite {
+pub const PLAYER_SPRITE: Sprite = Sprite {
     path: "character-walk.png",
     tile_size: (1.0, 2.0),
     n_columns: 4,

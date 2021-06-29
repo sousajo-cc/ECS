@@ -1,20 +1,20 @@
 use bevy::prelude::*;
 
 use crate::direction::Direction;
-use crate::sprite::SPRITE;
+use crate::sprite::PLAYER_SPRITE;
 
 
-pub struct Char {
+pub struct PlayerCharacter {
     position: Vec3,
     speed: f32,
     facing: Direction,
     sprite_index: u32,
 }
 
-impl Char {
+impl PlayerCharacter {
 
     pub fn new() -> Self {
-        Char {
+        PlayerCharacter {
             position: Vec3::new(0.0, 0.0, 1.0),
             speed: 0.0,
             facing: Direction::Right,
@@ -25,11 +25,11 @@ impl Char {
     pub fn get_texture_atlas(texture_handle: Handle<Texture>) -> (TextureAtlas, Transform) {
         let texture_atlas = TextureAtlas::from_grid(
             texture_handle,
-            Vec2::from(SPRITE.tile_size),
-            SPRITE.n_columns,
-            SPRITE.n_rows,
+            Vec2::from(PLAYER_SPRITE.tile_size),
+            PLAYER_SPRITE.n_columns,
+            PLAYER_SPRITE.n_rows,
         );
-        let transform = Transform::from_scale(Vec3::splat(SPRITE.scale));
+        let transform = Transform::from_scale(Vec3::splat(PLAYER_SPRITE.scale));
         (texture_atlas, transform)
     }
 
@@ -38,8 +38,8 @@ impl Char {
             self.sprite_index = self.still_sprite_index();
         } else {
             self.sprite_index += 1;
-            if self.sprite_index % SPRITE.n_columns as u32 == 0 {
-                self.sprite_index -= SPRITE.n_columns as u32;
+            if self.sprite_index % PLAYER_SPRITE.n_columns as u32 == 0 {
+                self.sprite_index -= PLAYER_SPRITE.n_columns as u32;
             }
         };
         self.sprite_index

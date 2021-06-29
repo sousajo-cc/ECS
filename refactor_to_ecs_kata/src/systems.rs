@@ -2,16 +2,17 @@ use bevy::prelude::*;
 
 use crate::components::PlayerCharacter;
 use crate::direction::Direction;
-use crate::sprite::PLAYER_SPRITE;
 
 
-pub fn load_sprite_sheet(
+pub fn load_player_sprite_sheet(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
+    use crate::sprite::PLAYER_SPRITE;
+
     let texture_handle = asset_server.load(PLAYER_SPRITE.path);
-    let (texture_atlas, transform) = PlayerCharacter::get_texture_atlas(texture_handle);
+    let (texture_atlas, transform) = PLAYER_SPRITE.get_texture_atlas(texture_handle);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());

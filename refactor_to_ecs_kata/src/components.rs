@@ -5,12 +5,13 @@ use crate::sprite::Sprite;
 
 
 pub struct PlayerCharacter {
-    pub position: Vec3,
     pub speed: f32,
     pub sprite: Sprite,
 }
 
 pub struct Facing(pub Direction);
+pub struct Position(pub Vec3);
+pub struct Speed(pub f32);
 
 impl PlayerCharacter {
 
@@ -18,7 +19,6 @@ impl PlayerCharacter {
         use crate::sprite::PLAYER_SPRITE;
 
         PlayerCharacter {
-            position: Vec3::new(0.0, 0.0, 1.0),
             speed: 0.0,
             sprite: PLAYER_SPRITE,
         }

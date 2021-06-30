@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{PlayerCharacter, Facing};
+use crate::components::{PlayerCharacter, Facing, Position};
 use crate::direction::Direction;
 
 
@@ -24,7 +24,8 @@ pub fn load_player_sprite_sheet(
         })
         .insert(Timer::from_seconds(PLAYER_SPRITE.frame_time, true))
         .insert(PlayerCharacter::new())
-        .insert(Facing(Direction::Right));
+        .insert(Facing(Direction::Right))
+        .insert(Position(Vec3::new(0.0, 0.0, 1.0)));
 }
 pub fn still_sprite_index(facing: &mut Facing) -> u32 {
     match &facing.0 {
@@ -78,18 +79,18 @@ pub fn input(
     }
 }
 
-pub fn update_position(player: &mut PlayerCharacter, facing: &mut Facing, dt: f32) -> Vec3 {
+pub fn update_position(player: &mut PlayerCharacter, facing: &mut Facing, position: &mut Position, dt: f32) -> Vec3 {
     let ds = dt * player.speed * facing.0.as_vec();
-    player.position += ds;
-    player.position
+    position.0 += ds;
+    position.0
 }
 
     pub fn movement(
     time: Res<Time>,
-    mut query: Query<(&mut PlayerCharacter, &mut Transform, &mut Facing)>,
+    mut query: Query<(&mut PlayerCharacter, &mut Transform, &mut Facing, &mut Position)>,
 ) {
-    for (mut char, mut transform, mut facing) in query.iter_mut() {
-        let position = update_position(&mut char, &mut facing, time.delta_seconds());
+    for (mut char, mut transform, mut facing, mut position) in query.iter_mut() {
+        let position = update_position(&mut char, &mut facing, &mut position, time.delta_seconds());
         let translation = &mut transform.translation;
         translation.x = position.x;
         translation.y = position.y;

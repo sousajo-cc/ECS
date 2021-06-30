@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{PlayerCharacter, Facing, Position};
+use crate::components::{PlayerCharacter, Facing, Position, Speed};
 use crate::direction::Direction;
 
 
@@ -25,7 +25,8 @@ pub fn load_player_sprite_sheet(
         .insert(Timer::from_seconds(PLAYER_SPRITE.frame_time, true))
         .insert(PlayerCharacter::new())
         .insert(Facing(Direction::Right))
-        .insert(Position(Vec3::new(0.0, 0.0, 1.0)));
+        .insert(Position(Vec3::new(0.0, 0.0, 1.0)))
+        .insert(Speed(0.0));
 }
 pub fn still_sprite_index(facing: &mut Facing) -> u32 {
     match &facing.0 {
@@ -43,8 +44,8 @@ pub fn set_direction(player: &mut PlayerCharacter, facing: &mut Facing, directio
     };
 }
 
-pub fn update_sprite_index(player: &mut PlayerCharacter, facing: &mut Facing) -> u32 {
-    if player.speed == 0.0 {
+pub fn update_sprite_index(player: &mut PlayerCharacter, facing: &mut Facing, speed: &mut Speed) -> u32 {
+    if speed.0 == 0.0 {
         player.sprite.current_index = still_sprite_index(facing);
     } else {
         player.sprite.current_index += 1;
@@ -55,42 +56,59 @@ pub fn update_sprite_index(player: &mut PlayerCharacter, facing: &mut Facing) ->
     player.sprite.current_index
 }
 
+pub fn decrease_speed(speed: &mut Speed, dt: f32) {
+    speed.0 -= 240.0 * dt;
+    if speed.0 < 0.0 {
+        speed.0 = 0.0;
+    };
+}
+
+pub fn increase_speed(speed: &mut Speed, dt: f32) {
+    speed.0 += 80.0 * dt;
+    if speed.0 > 120.0 {
+        speed.0 = 120.0;
+    };
+}
+
 pub fn input(
     time: Res<Time>,
     input: Res<Input<KeyCode>>,
-    mut query: Query<(&mut PlayerCharacter, &mut Facing)>,
+    mut query: Query<(&mut PlayerCharacter, &mut Facing, &mut Speed)>,
 ) {
-    for (mut char, mut facing) in query.iter_mut() {
+    for (mut char, mut facing, mut speed) in query.iter_mut() {
         if input.pressed(KeyCode::Left) {
             set_direction(&mut char, &mut facing, Direction::Left);
-            char.increase_speed(time.delta_seconds());
+            increase_speed(&mut speed, time.delta_seconds());
         } else if input.pressed(KeyCode::Up) {
             set_direction(&mut char, &mut facing, Direction::Up);
-            char.increase_speed(time.delta_seconds());
+            increase_speed(&mut speed, time.delta_seconds());
         } else if input.pressed(KeyCode::Down) {
             set_direction(&mut char, &mut facing, Direction::Down);
-            char.increase_speed(time.delta_seconds());
+            increase_speed(&mut speed, time.delta_seconds());
         } else if input.pressed(KeyCode::Right) {
             set_direction(&mut char, &mut facing, Direction::Right);
-            char.increase_speed(time.delta_seconds());
+            increase_speed(&mut speed, time.delta_seconds());
         } else {
-            char.decrease_speed(time.delta_seconds());
+            decrease_speed(&mut speed,time.delta_seconds());
         };
     }
 }
 
-pub fn update_position(player: &mut PlayerCharacter, facing: &mut Facing, position: &mut Position, dt: f32) -> Vec3 {
-    let ds = dt * player.speed * facing.0.as_vec();
+pub fn update_position(facing: &mut Facing,
+                       position: &mut Position,
+                       speed: &mut Speed,
+                       dt: f32) -> Vec3 {
+    let ds = dt * speed.0 * facing.0.as_vec();
     position.0 += ds;
     position.0
 }
 
     pub fn movement(
     time: Res<Time>,
-    mut query: Query<(&mut PlayerCharacter, &mut Transform, &mut Facing, &mut Position)>,
+    mut query: Query<(&mut Transform, &mut Facing, &mut Position, &mut Speed)>,
 ) {
-    for (mut char, mut transform, mut facing, mut position) in query.iter_mut() {
-        let position = update_position(&mut char, &mut facing, &mut position, time.delta_seconds());
+    for (mut transform, mut facing, mut position, mut speed) in query.iter_mut() {
+        let position = update_position(&mut facing, &mut position, &mut speed, time.delta_seconds());
         let translation = &mut transform.translation;
         translation.x = position.x;
         translation.y = position.y;
@@ -100,12 +118,12 @@ pub fn update_position(player: &mut PlayerCharacter, facing: &mut Facing, positi
 
 pub fn sprite(
     time: Res<Time>,
-    mut query: Query<(&mut PlayerCharacter, &mut Timer, &mut TextureAtlasSprite, &mut Facing)>,
+    mut query: Query<(&mut PlayerCharacter, &mut Timer, &mut TextureAtlasSprite, &mut Facing, &mut Speed)>,
 ) {
-    for (mut char, mut timer, mut sprite, mut facing) in query.iter_mut() {
+    for (mut char, mut timer, mut sprite, mut facing, mut speed) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.finished() {
-            sprite.index = update_sprite_index(&mut char, &mut facing);
+            sprite.index = update_sprite_index(&mut char, &mut facing, &mut speed);
         }
     }
 }

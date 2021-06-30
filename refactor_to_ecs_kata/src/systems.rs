@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{PlayerCharacter, Facing, Position, Speed};
+use crate::components::{PlayerCharacter, Facing, Position, Speed, PLAYER_SPRITE, SpriteSheet};
 use crate::direction::Direction;
 
 
@@ -9,7 +9,6 @@ pub fn load_player_sprite_sheet(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    use crate::sprite::PLAYER_SPRITE;
 
     let texture_handle = asset_server.load(PLAYER_SPRITE.path);
     let (texture_atlas, transform) = PLAYER_SPRITE.get_texture_atlas(texture_handle);
@@ -23,10 +22,11 @@ pub fn load_player_sprite_sheet(
             ..Default::default()
         })
         .insert(Timer::from_seconds(PLAYER_SPRITE.frame_time, true))
-        .insert(PlayerCharacter::new())
+        .insert(PlayerCharacter)
         .insert(Facing(Direction::Right))
         .insert(Position(Vec3::new(0.0, 0.0, 1.0)))
-        .insert(Speed(0.0));
+        .insert(Speed(0.0))
+        .insert(PLAYER_SPRITE);
 }
 pub fn still_sprite_index(facing: &mut Facing) -> u32 {
     match &facing.0 {
@@ -37,23 +37,23 @@ pub fn still_sprite_index(facing: &mut Facing) -> u32 {
     }
 }
 
-pub fn set_direction(player: &mut PlayerCharacter, facing: &mut Facing, direction: Direction) {
+pub fn set_direction(facing: &mut Facing, sprite: &mut SpriteSheet, direction: Direction) {
     if facing.0 != direction {
         facing.0 = direction;
-        player.sprite.current_index = still_sprite_index(facing);
+        sprite.current_index = still_sprite_index(facing);
     };
 }
 
-pub fn update_sprite_index(player: &mut PlayerCharacter, facing: &mut Facing, speed: &mut Speed) -> u32 {
+pub fn update_sprite_index(facing: &mut Facing, speed: &mut Speed, sprite: &mut SpriteSheet) -> u32 {
     if speed.0 == 0.0 {
-        player.sprite.current_index = still_sprite_index(facing);
+        sprite.current_index = still_sprite_index(facing);
     } else {
-        player.sprite.current_index += 1;
-        if player.sprite.current_index % player.sprite.n_columns as u32 == 0 {
-            player.sprite.current_index -= player.sprite.n_columns as u32;
+        sprite.current_index += 1;
+        if sprite.current_index % sprite.n_columns as u32 == 0 {
+            sprite.current_index -= sprite.n_columns as u32;
         }
     };
-    player.sprite.current_index
+    sprite.current_index
 }
 
 pub fn decrease_speed(speed: &mut Speed, dt: f32) {
@@ -73,20 +73,21 @@ pub fn increase_speed(speed: &mut Speed, dt: f32) {
 pub fn input(
     time: Res<Time>,
     input: Res<Input<KeyCode>>,
-    mut query: Query<(&mut PlayerCharacter, &mut Facing, &mut Speed)>,
+    mut query: Query<(&mut PlayerCharacter, &mut Facing, &mut Speed, &mut SpriteSheet)>,
 ) {
-    for (mut char, mut facing, mut speed) in query.iter_mut() {
+    // we only want to perform this for the PlayerCharacter
+    for (mut _marker_char, mut facing, mut speed, mut sprite) in query.iter_mut() {
         if input.pressed(KeyCode::Left) {
-            set_direction(&mut char, &mut facing, Direction::Left);
+            set_direction(&mut facing, &mut sprite, Direction::Left);
             increase_speed(&mut speed, time.delta_seconds());
         } else if input.pressed(KeyCode::Up) {
-            set_direction(&mut char, &mut facing, Direction::Up);
+            set_direction(&mut facing, &mut sprite,Direction::Up);
             increase_speed(&mut speed, time.delta_seconds());
         } else if input.pressed(KeyCode::Down) {
-            set_direction(&mut char, &mut facing, Direction::Down);
+            set_direction(&mut facing, &mut sprite, Direction::Down);
             increase_speed(&mut speed, time.delta_seconds());
         } else if input.pressed(KeyCode::Right) {
-            set_direction(&mut char, &mut facing, Direction::Right);
+            set_direction(&mut facing, &mut sprite, Direction::Right);
             increase_speed(&mut speed, time.delta_seconds());
         } else {
             decrease_speed(&mut speed,time.delta_seconds());
@@ -118,12 +119,16 @@ pub fn update_position(facing: &mut Facing,
 
 pub fn sprite(
     time: Res<Time>,
-    mut query: Query<(&mut PlayerCharacter, &mut Timer, &mut TextureAtlasSprite, &mut Facing, &mut Speed)>,
+    mut query: Query<(&mut Timer,
+                      &mut TextureAtlasSprite,
+                      &mut Facing,
+                      &mut Speed,
+                      &mut SpriteSheet)>,
 ) {
-    for (mut char, mut timer, mut sprite, mut facing, mut speed) in query.iter_mut() {
+    for (mut timer, mut sprite, mut facing, mut speed, mut spritesheet) in query.iter_mut() {
         timer.tick(time.delta());
         if timer.finished() {
-            sprite.index = update_sprite_index(&mut char, &mut facing, &mut speed);
+            sprite.index = update_sprite_index(&mut facing, &mut speed, &mut spritesheet);
         }
     }
 }

@@ -5,10 +5,10 @@ use crate::sprite_sheet::SpriteSheet;
 
 
 pub struct PlayerCharacter {
-    position: Vec3,
-    speed: f32,
-    facing: Direction,
-    sprite: SpriteSheet,
+    pub position: Vec3,
+    pub speed: f32,
+    pub facing: Direction,
+    pub sprite: SpriteSheet,
 }
 
 impl PlayerCharacter {

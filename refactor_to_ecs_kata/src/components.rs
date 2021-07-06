@@ -4,7 +4,7 @@ use crate::direction::Direction;
 
 
 pub struct PlayerCharacter;
-
+pub struct EnemyCharacter;
 pub struct Position(pub Vec3);
 pub struct Speed(pub f32);
 pub struct Facing(pub Direction);
@@ -27,6 +27,7 @@ pub const PLAYER_SPRITE: SpriteSheet = SpriteSheet {
     frame_time: 0.2,
     current_index: 15,
 };
+
 
 impl SpriteSheet {
     pub fn get_texture_atlas(&self, texture_handle: Handle<Texture>) -> (TextureAtlas, Transform) {

@@ -13,5 +13,6 @@ fn main() {
         .add_system(input.system())
         .add_system(movement.system())
         .add_system(sprite.system())
+        .add_startup_system(load_enemy_sprite_sheet.system())
         .run();
 }

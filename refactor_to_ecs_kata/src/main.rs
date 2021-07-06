@@ -2,7 +2,6 @@ use bevy::prelude::*;
 
 mod components;
 mod direction;
-mod sprite_sheet;
 mod systems;
 
 fn main() {
@@ -14,5 +13,6 @@ fn main() {
         .add_system(input.system())
         .add_system(movement.system())
         .add_system(sprite.system())
+        .add_startup_system(load_enemy_sprite_sheet.system())
         .run();
 }

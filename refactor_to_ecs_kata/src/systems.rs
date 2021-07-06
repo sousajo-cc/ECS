@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::PlayerCharacter;
+use crate::components::*;
 use crate::direction::Direction;
 
 
@@ -9,7 +9,7 @@ pub fn load_player_sprite_sheet(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    use crate::sprite::PLAYER_SPRITE;
+    use crate::sprite_sheet::PLAYER_SPRITE;
 
     let texture_handle = asset_server.load(PLAYER_SPRITE.path);
     let (texture_atlas, transform) = PLAYER_SPRITE.get_texture_atlas(texture_handle);

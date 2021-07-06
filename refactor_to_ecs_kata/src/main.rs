@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 mod components;
 mod direction;
-mod sprite;
+mod sprite_sheet;
 mod systems;
 
 fn main() {

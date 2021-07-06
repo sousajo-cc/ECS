@@ -1,20 +1,20 @@
 use bevy::prelude::*;
 
 use crate::direction::Direction;
-use crate::sprite::Sprite;
+use crate::sprite_sheet::SpriteSheet;
 
 
 pub struct PlayerCharacter {
     position: Vec3,
     speed: f32,
     facing: Direction,
-    sprite: Sprite,
+    sprite: SpriteSheet,
 }
 
 impl PlayerCharacter {
 
     pub fn new() -> Self {
-        use crate::sprite::PLAYER_SPRITE;
+        use crate::sprite_sheet::PLAYER_SPRITE;
 
         PlayerCharacter {
             position: Vec3::new(0.0, 0.0, 1.0),
